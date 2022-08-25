@@ -11,7 +11,7 @@ I made this because the date of creation and latest modification for projects re
 Because of how I dynamically assign attributes to my container classes, this (and other inconsistencies I have yet to find)
 will end up as attributes for my classes, which I don't want
 
-This just replaces the bad key names with better ones, fixing the issue
+This just defines key name replacements 
 '''
 ALT_ANAMES = {
     "date_created" : "created_at", 
@@ -19,6 +19,7 @@ ALT_ANAMES = {
     "published" : "created_at",
     "modified" : "updated_at"
 }
+
 
 class Core:
     '''
@@ -30,10 +31,39 @@ class Core:
         self.token = token
     
 
-    def search(self, query):
-        result = requests.get(f"{PATH}search?query={query}")
+    def search(self, query, offset=0, limit=10):
+        '''
+        Requests a search on modrinth's database
+
+        # DO TO: Implement facets and filters
+        '''
+        result = requests.get(f"{PATH}search?query={query}&offset={offset}&limit={limit}")
         if result.status_code == 200:
             return SearchResult(json.loads(result.text))
+        else:
+            return result.status_code
+    
+
+    def get_project(self, project_id):
+        result = requests.get(f"{PATH}project/{project_id}")
+        if result.status_code == 200:
+            return Project(json.loads(result.text))
+        else:
+            return result.status_code
+    
+
+    def get_project_team(self, project_id):
+        result = requests.get(f"{PATH}project/{project_id}/members")
+        if result.status_code == 200:
+            return Team(json.loads(result.text))
+        else:
+            return result.status_code
+    
+
+    def get_team(self, team_id):
+        result = requests.get(f"{PATH}project/{team_id}/members")
+        if result.status_code == 200:
+            return Team(json.loads(result.text))
         else:
             return result.status_code
 
@@ -80,8 +110,8 @@ class SearchResult:
 class ProjectListing():
     '''
     A variation of the Project class
-    Because the structure and composition of the projects returned from a search query are different than a regular get project call, 
-    search query project data isn't compatible with the regular Project class. That's the gap this class fills
+    This class exists because the structure and composition of project data returned from a search query 
+    is vastly different than that of a regular get project call
     '''
     def __init__(self, input):
         attribute_init(self, input, "ProjectListing")
