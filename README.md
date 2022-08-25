@@ -1,7 +1,8 @@
-Pyrinth
+Rintheon
 =====
 
-Pyrinth is a API wrapper for Modrinth, written in Python
+Rintheon is a API wrapper for Modrinth, written in Python
 
-Current Status: In development, Unusable
+Current Status: In development, Unusable.
+
 To Do: Make readme
