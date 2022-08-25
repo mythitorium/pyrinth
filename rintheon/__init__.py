@@ -5,23 +5,9 @@ Pyrinth by Mythitorium
 import requests
 import json
 from datetime import datetime
+from functions import set_bulk_attr
 
 PATH = "https://api.modrinth.com/v2/"
-'''
-I made this because the date of creation and latest modification for projects returned via a get project call and via search call are named differently for some reason.
-Because of how I dynamically assign attributes to my container classes, this (and other inconsistencies I have yet to find)
-will end up as attributes for my classes, which I don't want
-
-This just defines key name replacements 
-'''
-ALT_ANAMES = {
-    "date_created" : "created_at", 
-    "date_updated" : "updated_at",
-    "published" : "created_at",
-    "modified" : "updated_at",
-
-    "created" : "created_at"
-}
 
 
 class Core:
@@ -62,7 +48,8 @@ class Core:
             return result.status_code
 
     
-    def get_dependencies(self, project_id)
+    def get_dependencies(self, project_id):
+        pass
     
 
     def get_project_team(self, project_id):
@@ -97,8 +84,10 @@ class Project:
     Represents a modrinth project, either a mod or a modpack
     '''
     def __init__(self, input):
-        attribute_init(self, input, "Project", ["Gallery"])
-        self.gallery = [Image(image) for image in input.gallery]
+        set_bulk_attr(self, input, ['gallery','published','modified'])
+        self.created_at = input['published']
+        self.updated_at = input['modified']
+        self.gallery = [Image(image) for image in input['gallery']]
 
 
 class Team:
@@ -107,10 +96,8 @@ class Team:
     A team is a collection of one or more users who own/manage a project
     '''
     def __init__(self, input):
-        self.members = []
-        for member in input['members']:
-            self.members.append(TeamMember(member))
-        self.id = input['members'][0]['team_id']
+        self.members = [TeamMember(member) for member in input]
+        self.id = input[0]['team_id']
 
 
 class TeamMember:
@@ -131,7 +118,7 @@ class User:
     Represents a modrinth user
     '''
     def __init__(self, input):
-        attribute_init(self, input, "User")
+        set_bulk_attr(self, input)
 
 
 class SearchResult:
@@ -140,11 +127,7 @@ class SearchResult:
     Searching modrinth's mod list will return a list of mods given the request query parameters
     '''
     def __init__(self, input):
-        projects = []
-        # Turn each hit into a ProjectListing 
-        for hit in input["hits"]:
-            projects.append(ProjectListing(hit))
-        self.results = projects
+        self.results = [ProjectListing(hit) for hit in input['hits']]
         self.total_hits = input["total_hits"]
 
 
@@ -155,7 +138,9 @@ class ProjectListing:
     is vastly different than that of a regular get project call
     '''
     def __init__(self, input):
-        attribute_init(self, input, "ProjectListing")
+        set_bulk_attr(self, input, ['date_created','date_modified'])
+        self.created_at = input['date_created']
+        self.updated_at = input['date_modified']
 
 
 class Image:
@@ -163,21 +148,4 @@ class Image:
     Represents a gallery image
     '''
     def __init__(self, input):
-        attribute_init(self, input, "Image")
-
-
-def attribute_init(target_class, input_dict, class_type, exceptions):
-    '''
-    Function that handles assigning mass attributes to container classes
-    In a function instead of the class init's themselves so I don't have to manage the same lines of code across a million places
-
-    TO DO: Error checking
-    '''
-    for key in input_dict.keys():
-        if not key in exceptions:
-            # Checks for alt attribute name to use instead of the input's
-            if key in ALT_ANAMES.keys():
-                attribute = ALT_ANAMES[key]
-            else:
-                attribute = key
-            setattr(target_class, attribute, input_dict[key])
+        set_bulk_attr(self, input)
