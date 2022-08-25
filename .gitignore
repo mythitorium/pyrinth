@@ -2,3 +2,4 @@
 main.py
 test.py
 pyrinth/__pycache__/__init__.cpython-39.pyc
+*.pyc
