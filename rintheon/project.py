@@ -2,7 +2,7 @@
 Project class and sub classes
 '''
 
-from .functions import set_bulk_attr
+from .functions import *
 
 
 class Project:
@@ -41,6 +41,30 @@ class ProjectListing:
 class Image:
     '''
     Represents a gallery image
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, input)
+
+
+class License:
+    '''
+    Represents a project's copyright license
+    ''' 
+    def __init__(self, input):
+        set_bulk_attr(self, input)
+
+
+class DonationSite:
+    '''
+    Represents a donation site a project may have
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, input)
+
+
+class ModMessage:
+    '''
+    Represents a mod message on a project
     '''
     def __init__(self, input):
         set_bulk_attr(self, input)

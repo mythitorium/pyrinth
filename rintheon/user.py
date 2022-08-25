@@ -2,6 +2,8 @@
 Classes related to users and teams
 '''
 
+from .functions import *
+
 
 class Team:
     '''
@@ -32,3 +34,18 @@ class User:
     '''
     def __init__(self, input):
         set_bulk_attr(self, input)
+
+
+class MemberPerms:
+    '''
+    Represents a team member's permissions
+    Turns a bitflag into a bunch of booleans
+    '''
+    def __init__(self, input):
+        attributes = ['upload_version','delete_version','edit_details','edit_body','manage_invites','remove_member','edit_member','delete_project']
+        if input == None:
+            for attr in attributes:
+                setattr(self, attr, None)
+        else:
+            for index in 8:
+                setattr(self, attributes[index], bool(input[index]))

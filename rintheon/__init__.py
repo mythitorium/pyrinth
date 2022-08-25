@@ -5,8 +5,8 @@ Pyrinth by Mythitorium
 import requests
 import json
 from datetime import datetime
-from .project import Project, SearchResult
-from .user import Team, User
+from .project import *
+from .user import *
 
 PATH = "https://api.modrinth.com/v2/"
 
