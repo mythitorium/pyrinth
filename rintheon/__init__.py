@@ -7,6 +7,7 @@ import json
 from datetime import datetime
 from .project import *
 from .user import *
+from .errors import *
 
 PATH = "https://api.modrinth.com/v2/"
 
@@ -23,6 +24,8 @@ class Core:
         self.ratelimit = -1
         self.ratelimit_remaining = -1
         self.ratelimit_refresh = -1
+
+        self.status = None
     
 
     def search(self, query, offset=0, limit=10):
@@ -38,15 +41,16 @@ class Core:
             return result.status_code
     
 
-    def get_project(self, project_id):
+    def get_project(self, project_id: str):
         '''
         Get a project from its id or slug
         '''
+        validate_args([project_id],[str])
         result = requests.get(f"{PATH}project/{project_id}")
         if result.status_code == 200:
             return Project(json.loads(result.text))
         else:
-            return result.status_code
+            raise NotFound(project_id, "project")
 
     
     def get_dependencies(self, project_id):
@@ -78,3 +82,7 @@ class Core:
             return User(json.loads(result.text))
         else:
             return result.status_code
+    
+
+    def get_project_versions(self, project_id):
+        pass
