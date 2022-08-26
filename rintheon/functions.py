@@ -1,12 +1,21 @@
 '''
-Separate script for universal functions utilized by classes
+Separate script for useful functions
 '''
 
-def set_bulk_attr(target_self, input, exceptions=[]):
+from .errors import *
+
+def set_bulk_attr(caller, input, exceptions=[]):
     '''
     Function that handles assigning mass attributes to container classes
     Updated to be less dumb
     '''
     for key in input.keys():
         if not key.lower() in exceptions:
-            setattr(target_self, key, input[key])
+            setattr(caller, key, input[key])
+
+
+def validate_args(args: list, types: list):
+    for index in range(len(args)):
+        if not type(args[index]) == types[index]:
+            raise InputError(index, type(args[index]), types[index])
+
