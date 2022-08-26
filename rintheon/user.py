@@ -49,3 +49,4 @@ class MemberPerms:
         else:
             for index in 8:
                 setattr(self, attributes[index], bool(input[index]))
+
