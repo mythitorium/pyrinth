@@ -15,7 +15,10 @@ def set_bulk_attr(caller, input, exceptions=[]):
 
 
 def validate_args(args: list, types: list):
+    '''
+    Used to validate the arguments for functions. Catches bad data before it's used
+    '''
     for index in range(len(args)):
         if not type(args[index]) == types[index]:
-            raise InputError(index, type(args[index]), types[index])
+            raise ArgError(index, type(args[index]), types[index])
 

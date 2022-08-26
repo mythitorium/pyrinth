@@ -1,5 +1,5 @@
 '''
-Pyrinth by Mythitorium
+Rintheon by Mythitorium
 '''
 
 import requests
@@ -38,7 +38,7 @@ class Core:
         if result.status_code == 200:
             return SearchResult(json.loads(result.text))
         else:
-            return result.status_code
+            raise NotFound(query, "search")
     
 
     def get_project(self, project_id: str):
@@ -65,7 +65,7 @@ class Core:
         if result.status_code == 200:
             return Team(json.loads(result.text))
         else:
-            return result.status_code
+            raise NotFound(project_id, "project")
     
 
     def get_team(self, team_id):
@@ -73,7 +73,7 @@ class Core:
         if result.status_code == 200:
             return Team(json.loads(result.text))
         else:
-            return result.status_code
+            raise NotFound(team_id, "team")
     
 
     def get_user(self, user_id):
@@ -81,7 +81,7 @@ class Core:
         if result.status_code == 200:
             return User(json.loads(result.text))
         else:
-            return result.status_code
+            raise NotFound(user_id, "user")
     
 
     def get_project_versions(self, project_id):
