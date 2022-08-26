@@ -38,6 +38,36 @@ class ProjectListing:
         self.updated_at = input['date_modified']
 
 
+
+class ProjectVersion:
+    '''
+    Represents a project 'version'
+    Contains information about a specific mod release, dependencies, and any given download files
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, input, ['files','dependencies'])
+        self.files = [ProjectFile(i) for i in input['files']]
+        self.dependencies = [Dependency(e) for i in input['dependencies']]
+
+
+class ProjectFile:
+    '''
+    Represents a downloadable file within a project version
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, input, ['hashes'])
+        self.hash_sha512 = input['hashes']['sha512']
+        self.hash_sha1 = input['hashes']['sha1']
+
+
+class Dependency:
+    '''
+    Represents a 'dependance' for a project version, information pointing to another project
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, input)
+
+
 class Image:
     '''
     Represents a gallery image
