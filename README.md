@@ -1,7 +1,7 @@
-Rintheon
+Swagrinth
 =====
 
-Rintheon is a API wrapper for Modrinth, written in Python
+Swagrinth is a API wrapper for Modrinth, written in Python
 
 Current Status: In development, Unusable
 

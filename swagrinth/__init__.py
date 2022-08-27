@@ -1,9 +1,9 @@
 '''
-Rintheon by Mythitorium
+Swagrinth by Mythitorium
 '''
 
 import requests
-import json
+from json import loads
 from datetime import datetime
 from .project import *
 from .user import *
@@ -22,11 +22,21 @@ class Core:
         self.token = token
 
         self.ratelimit = -1
-        self.ratelimit_remaining = -1
-        self.ratelimit_refresh = -1
+        self.remaining = -1
+        self.next_refresh = -1
 
         self.status = None
     
+
+    def update_ratelimit_info(self, headers):
+        self.ratelimit = headers['X-Ratelimit-Limit']
+        self.remaining = headers['X-Ratelimit-Remaining']
+        self.next_refresh = headers['X-Ratelimit-Reset']
+    
+
+    def get_ratelimit(self):
+        return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
+
 
     def search(self, query, offset=0, limit=10):
         '''
@@ -34,9 +44,11 @@ class Core:
 
         # DO TO: Implement facets and filters
         '''
+        validate_args([query, offset, limit],[str, int, int])
+
         result = requests.get(f"{PATH}search?query={query}&offset={offset}&limit={limit}")
         if result.status_code == 200:
-            return SearchResult(json.loads(result.text))
+            return SearchResult(loads(result.text))
         else:
             raise NotFound(query, "search")
     
@@ -47,8 +59,9 @@ class Core:
         '''
         validate_args([project_id],[str])
         result = requests.get(f"{PATH}project/{project_id}")
+        self.update_ratelimit_info(result.headers)
         if result.status_code == 200:
-            return Project(json.loads(result.text))
+            return Project(loads(result.text))
         else:
             raise NotFound(project_id, "project")
 
@@ -61,28 +74,35 @@ class Core:
         '''
         Get a team composition from 
         '''
+        validate_args([project_id],[str])
+
         result = requests.get(f"{PATH}project/{project_id}/members")
         if result.status_code == 200:
-            return Team(json.loads(result.text))
+            return Team(loads(result.text))
         else:
             raise NotFound(project_id, "project")
     
 
     def get_team(self, team_id):
+        validate_args([team_id],[str])
+
         result = requests.get(f"{PATH}project/{team_id}/members")
         if result.status_code == 200:
-            return Team(json.loads(result.text))
+            return Team(loads(result.text))
         else:
             raise NotFound(team_id, "team")
     
 
     def get_user(self, user_id):
+        validate_args([user_id],[str])
+
         result = requests.get(f"{PATH}user/{user_id}")
         if result.status_code == 200:
-            return User(json.loads(result.text))
+            return User(loads(result.text))
         else:
             raise NotFound(user_id, "user")
     
 
     def get_project_versions(self, project_id):
         pass
+
