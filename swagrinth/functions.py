@@ -4,6 +4,7 @@ Separate script for useful functions
 
 from .errors import *
 
+
 def set_bulk_attr(caller, input, exceptions=[]):
     '''
     Function that handles assigning mass attributes to container classes

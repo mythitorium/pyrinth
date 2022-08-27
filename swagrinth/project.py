@@ -3,9 +3,10 @@ Project class and sub classes
 '''
 
 from .functions import *
+from .base import *
 
 
-class Project:
+class Project(BaseClass):
     '''
     Represents a modrinth project, either a mod or a modpack
     '''
