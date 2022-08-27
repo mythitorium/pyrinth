@@ -104,5 +104,24 @@ class Core:
     
 
     def get_project_versions(self, project_id):
-        pass
+        '''
+        '''
+        validate_args([project_id],[str])
 
+        result = requests.get(f"{PATH}project/{project_id}/version")
+        if result.status_code == 200:
+            return [ProjectVersion(version_dict) for version_dict in loads(result.text)]
+        else:
+            raise NotFound(project_id, "project")
+    
+
+    def get_version(self, version_id):
+        '''
+        '''
+        validate_args([version_id],[str])
+
+        result = requests.get(f'{PATH}version/{version_id}')
+        if result.status_code == 200:
+            return ProjectVersion(loads(result.text))
+        else:
+            raise NotFound(version_id, "project version")
