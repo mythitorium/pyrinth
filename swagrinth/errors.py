@@ -23,8 +23,8 @@ class NoAccess(Exception):
     '''
     Raised when no authorization, when there was supposed to be
     '''
-    def __init__(self):
-        super().__init__(f'Valid authorization required')
+    def __init__(self, reason):
+        super().__init__(f'{reason.capitalize()}; Valid authorization required')
 
 
 class NotFound(Exception):
