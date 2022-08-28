@@ -39,7 +39,6 @@ class ProjectListing:
         self.updated_at = input['date_modified']
 
 
-
 class ProjectVersion:
     '''
     Represents a project 'version'
@@ -63,10 +62,25 @@ class ProjectFile:
 
 class Dependency:
     '''
-    Represents a 'dependance' for a project version, information pointing to another project
+    Represents a 'dependency' for a project version, information pointing to another project
     '''
     def __init__(self, input):
-        set_bulk_attr(self, input)
+        set_bulk_attr(self, input, ['version_id','project_id'])
+        if 'version_id' in input:
+            self.type = 'version'
+            self.id = input['version_id']
+        else:
+            self.type = 'project'
+            self.id = input['project_id']
+
+
+class DependencyList:
+    '''
+    Represents a collection of all dependencies a project has
+    '''
+    def __init__(self, input):
+        self.projects = [Project(project) for project in input['projects']]
+        self.versions = [ProjectVersion(version) for version in input['versions']]
 
 
 class Image:

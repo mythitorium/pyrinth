@@ -51,3 +51,11 @@ class MemberPerms(BaseClass):
             for index in 8:
                 setattr(self, attributes[index], bool(input[index]))
 
+
+class Notification(BaseClass):
+    '''
+    Represents a user notification
+    '''
+    def __init__(self, input):
+        set_bulk_attr(self, attr)
+
