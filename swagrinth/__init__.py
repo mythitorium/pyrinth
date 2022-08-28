@@ -46,7 +46,7 @@ class Core:
 
         # DO TO: Implement facets and filters
         '''
-        validate_args([query, offset, limit],[str, int, int])
+        self.validate_args([query, offset, limit],[str, int, int])
 
         result = requests.get(f"{PATH}search?query={query}&offset={offset}&limit={limit}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -61,7 +61,7 @@ class Core:
         '''
         Get a project from its id or slug
         '''
-        validate_args([project_id],[str])
+        self.validate_args([project_id],[str])
 
         result = requests.get(f"{PATH}project/{project_id}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -75,7 +75,7 @@ class Core:
     def get_project_dependencies(self, project_id):
         '''
         '''
-        validate_args([project_id],[str])
+        self.validate_args([project_id],[str])
         
         result = requests.get(f"{PATH}project/{project_id}/dependencies", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -91,7 +91,7 @@ class Core:
         '''
         Get a team composition from 
         '''
-        validate_args([project_id],[str])
+        self.validate_args([project_id],[str])
 
         result = requests.get(f"{PATH}project/{project_id}/members", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -103,7 +103,7 @@ class Core:
     
 
     def get_team(self, team_id):
-        validate_args([team_id],[str])
+        self.validate_args([team_id],[str])
 
         result = requests.get(f"{PATH}project/{team_id}/members", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -115,7 +115,7 @@ class Core:
     
 
     def get_user(self, user_id):
-        validate_args([user_id],[str])
+        self.validate_args([user_id],[str])
 
         result = requests.get(f"{PATH}user/{user_id}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -138,7 +138,7 @@ class Core:
 
 
     def get_user_projects(self, user_id):
-        validate_args([user_id],[str])
+        self.validate_args([user_id],[str])
 
         result = requests.get(f"{PATH}user/{user_id}/projects", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -152,7 +152,7 @@ class Core:
     def get_project_versions(self, project_id):
         '''
         '''
-        validate_args([project_id],[str])
+        self.validate_args([project_id],[str])
 
         result = requests.get(f"{PATH}project/{project_id}/version", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -166,7 +166,7 @@ class Core:
     def get_version(self, version_id):
         '''
         '''
-        validate_args([version_id],[str])
+        self.validate_args([version_id],[str])
 
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -177,7 +177,7 @@ class Core:
             raise NotFound(version_id, "project version")
     
 
-    def get_followed_projects():
+    def get_followed_projects(self):
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
 
@@ -185,11 +185,11 @@ class Core:
             return [Projects(project) for project in loads(result.text)]
         elif result.status_code == 401:
             raise NoAccess("No clearance")
-        else
+        else:
             raise NotFound('token', "user by")
     
 
-    def get_notifs():
+    def get_notifs(self):
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
 
@@ -197,6 +197,15 @@ class Core:
             return [Notification(notif) for notif in loads(result.text)]
         elif result.status_code == 401:
             raise NoAccess("No clearance")
-        else
+        else:
             raise NotFound('token', "user by")
+
+
+    def validate_args(self, args: list, types: list):
+        '''
+        Used to validate the arguments for functions. Catches bad data before it's used
+        '''
+        for index in range(len(args)):
+            if not type(args[index]) == types[index]:
+                raise ArgError(index, type(args[index]), types[index])
 

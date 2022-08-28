@@ -2,7 +2,6 @@
 Classes related to users and teams
 '''
 
-from .functions import *
 from .base import *
 
 
@@ -34,7 +33,7 @@ class User(BaseClass):
     Represents a modrinth user
     '''
     def __init__(self, input):
-        set_bulk_attr(self, input)
+        self.set_bulk_attr(self, input)
 
 
 class MemberPerms(BaseClass):
@@ -57,5 +56,5 @@ class Notification(BaseClass):
     Represents a user notification
     '''
     def __init__(self, input):
-        set_bulk_attr(self, attr)
+        self.set_bulk_attr(self, attr)
 
