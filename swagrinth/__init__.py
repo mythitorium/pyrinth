@@ -18,6 +18,8 @@ from datetime import datetime
 from .project import *
 from .user import *
 from .errors import *
+from inspect import getmembers, isclass, signature
+from .objecthandler import *
 
 PATH = "https://api.modrinth.com/v2/"
 
@@ -232,4 +234,12 @@ class Core:
         for index in range(len(args)):
             if not type(args[index]) == types[index]:
                 raise ArgError(index, type(args[index]), types[index])
+
+
+def init_data_object(source, class_type, input):
+    try:
+        the_class = getattr(eval(source), class_type)
+        print(str(signature(the_class.__init__))[1:-1].split(", ")[1:])
+    except AttributeError as reason:
+        print(f'{reason}')
 

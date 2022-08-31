@@ -3,6 +3,7 @@ Classes related to users and teams
 '''
 
 from .base import *
+from inspect import *
 
 
 class Team(BaseClass):
@@ -33,6 +34,7 @@ class User(BaseClass):
     Represents a modrinth user
     '''
     def __init__(self, input):
+        print(locals())
         self.set_bulk_attr(self, input)
 
 
@@ -56,5 +58,5 @@ class Notification(BaseClass):
     Represents a user notification
     '''
     def __init__(self, input):
-        self.set_bulk_attr(self, attr)
+        self.set_bulk_attr(self, input)
 
