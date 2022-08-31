@@ -7,8 +7,10 @@ class BadPayload(Exception):
     '''
     Exception for when modrinth rejects a sent payload
     '''
-    def __init__(self):
-        super().__init__(f'Sent invalid or unusable data')
+    def __init__(self, reason = ""):
+        details = ""
+        if not reason == "": details == f' ({reason})'
+        super().__init__(f'Sent invalid or unusable data{details}')
 
 
 class ArgError(Exception):
@@ -23,8 +25,13 @@ class NoAccess(Exception):
     '''
     Raised when no authorization, when there was supposed to be
     '''
-    def __init__(self, reason):
-        super().__init__(f'{reason.capitalize()}; Valid authorization required')
+    def __init__(self, reason, more_reasons = ""):
+        if more_reasons == "":
+            details = ""
+        else:
+            details = f' ({more_reasons})'
+        
+        super().__init__(f'{reason.capitalize()}; Valid authorization required{details}')
 
 
 class NotFound(Exception):
