@@ -24,7 +24,7 @@ class TeamMember(BaseClass):
         self.team_id = input['team_id']
         self.user = User(input['user'])
         self.role = input['role']
-        self.perms = input['permissions'] # TO DO: Use a dictionary or class instead of a bitflag
+        self.perms = MemberPerms(input['permissions'])
         self.accepted = input['accepted']
     
 
