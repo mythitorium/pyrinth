@@ -17,8 +17,11 @@ class ArgError(Exception):
     '''
     General exception raised when invalid information is given to a function
     '''
-    def __init__(self, index, actual_type, target_type):
-        super().__init__(f"At arg {index}: Expected {target_type}, got {actual_type}")
+    def __init__(self, index, actual_type, target_type, is_nested = False, nested_index = 0):
+        if not is_nested:
+            super().__init__(f"At arg {index}: Expected {target_type}, got {actual_type}")
+        else:
+            super().__init__(f"At index {nested_index} at {list} arg {index}: Expected {target_type}, got {actual_type}")
 
 
 class NoAccess(Exception):
