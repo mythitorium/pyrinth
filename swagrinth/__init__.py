@@ -1,9 +1,19 @@
 '''
+
 Swagrinth by Mythitorium
+++++
+
+TO DO LIST
+
+- Change all timestamps into datetime objects
+- Implement filters and tags
+- Build a validate class system
+- Start buildthedocs site
+
 '''
 
 import requests
-from json import loads
+from json import *
 from datetime import datetime
 from .project import *
 from .user import *
@@ -16,7 +26,7 @@ class Core:
     '''
     Main class for handling, sending, and requesting data
     '''
-    def __init__(self, token=""):
+    def __init__(self, token="", get_self=False):
         self.token = token
 
         self.ratelimit = -1
@@ -24,21 +34,36 @@ class Core:
         self.next_refresh = -1
 
         self.status = None
-    
 
-    def set_auth(self, token):
-        self.token = token
+        if not get_self:
+            self.self = None
+        else: 
+            self.get_self()
     
+    ''' GET REQUESTS '''
+
+    def set_auth(self, token, get_self=False):
+        self.token = token
+        if get_self: self.get_self()
+    
+    def get_self(self, return_copy=False):
+        result = requests.get(f"{PATH}user", headers={'Authorization': self.token})
+
+        if result.status_code == 200:
+            self.self = User(loads(result.text))
+            if return_copy: return User(loads(result.text))
+        elif result.status_code == 401:
+            raise NoAccess("No token")
+        else:
+            raise NotFound('token', "user by")
 
     def update_ratelimit_info(self, headers):
         self.ratelimit = headers['X-Ratelimit-Limit']
         self.remaining = headers['X-Ratelimit-Remaining']
         self.next_refresh = headers['X-Ratelimit-Reset']
     
-
     def get_ratelimit(self):
         return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
-
 
     def search(self, query, offset=0, limit=10):
         '''
@@ -56,7 +81,6 @@ class Core:
         else:
             raise NotFound(query, "search")
     
-
     def get_project(self, project_id: str):
         '''
         Get a project from its id or slug
@@ -71,8 +95,7 @@ class Core:
         else:
             raise NotFound(project_id, "project")
 
-
-    def get_project_dependencies(self, project_id):
+    def get_project_dependencies(self, project_id: str):
         '''
         '''
         self.validate_args([project_id],[str])
@@ -86,8 +109,7 @@ class Core:
         else:
             raise NotFound(project_id, "project")
 
-
-    def get_project_team(self, project_id):
+    def get_project_team(self, project_id: str):
         '''
         Get a team composition from 
         '''
@@ -101,8 +123,7 @@ class Core:
         else:
             raise NotFound(project_id, "project")
     
-
-    def get_team(self, team_id):
+    def get_team(self, team_id: str):
         self.validate_args([team_id],[str])
 
         result = requests.get(f"{PATH}project/{team_id}/members", headers={'Authorization': self.token})
@@ -113,8 +134,7 @@ class Core:
         else:
             raise NotFound(team_id, "team")
     
-
-    def get_user(self, user_id):
+    def get_user(self, user_id: str):
         self.validate_args([user_id],[str])
 
         result = requests.get(f"{PATH}user/{user_id}", headers={'Authorization': self.token})
@@ -125,19 +145,7 @@ class Core:
         else:
             raise NotFound(user_id, "user")
     
-
-    def get_auth_user(self):
-        result = requests.get(f"{PATH}user", headers={'Authorization': self.token})
-
-        if result.status_code == 200:
-            return User(loads(result.text))
-        elif result.status_code == 401:
-            raise NoAccess("No token")
-        else:
-            raise NotFound('token', "user by")
-
-
-    def get_user_projects(self, user_id):
+    def get_user_projects(self, user_id: str):
         self.validate_args([user_id],[str])
 
         result = requests.get(f"{PATH}user/{user_id}/projects", headers={'Authorization': self.token})
@@ -148,8 +156,7 @@ class Core:
         else:
             raise NotFound(user_id, "user")
 
-
-    def get_project_versions(self, project_id):
+    def get_project_versions(self, project_id: str):
         '''
         '''
         self.validate_args([project_id],[str])
@@ -161,9 +168,8 @@ class Core:
             return [ProjectVersion(version_dict) for version_dict in loads(result.text)]
         else:
             raise NotFound(project_id, "project")
-    
 
-    def get_version(self, version_id):
+    def get_version(self, version_id: str):
         '''
         '''
         self.validate_args([version_id],[str])
@@ -176,7 +182,6 @@ class Core:
         else:
             raise NotFound(version_id, "project version")
     
-
     def get_followed_projects(self):
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -188,7 +193,6 @@ class Core:
         else:
             raise NotFound('token', "user by")
     
-
     def get_notifs(self):
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -200,6 +204,26 @@ class Core:
         else:
             raise NotFound('token', "user by")
 
+    ''' MODIFY REQUESTS '''
+
+    def edit_profile(self, username, email = "", displayname = "", bio = ""):
+        self.validate_args([username, email, displayname, bio], [str,str,str,str])
+
+        payload = {'username' : username}
+        if not email == '': payload['email'] = email
+        if not displayname == '': payload['name'] = displayname
+        if not bio == '': payload['bio'] = bio
+
+        response = requests.patch(f'{PATH}user/{self.self.id}', json = payload, headers={'Authorization': self.token})
+        if response.status_code == 404:
+            raise NotFound(self.self.id, "user")
+        elif response.status_code == 401:
+            raise NoAccess("No clearance")
+        elif response.status_code == 400:
+            print(response.status_code)
+            raise BadPayload("Bad data", f'{response.text}')
+
+    ''' OTHER FUCNTIONS '''
 
     def validate_args(self, args: list, types: list):
         '''
