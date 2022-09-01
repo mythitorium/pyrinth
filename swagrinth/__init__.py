@@ -73,7 +73,7 @@ class Core:
 
         # DO TO: Implement facets and filters
         '''
-        self.validate_args([query, offset, limit],[str, int, int])
+        validate_var([(query, str),(offset, int),(limit, int)])
 
         result = requests.get(f"{PATH}search?query={query}&offset={offset}&limit={limit}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -87,7 +87,7 @@ class Core:
         '''
         Get a project from its id or slug
         '''
-        self.validate_args([project_id],[str])
+        validate_var([(project_id, str)])
 
         result = requests.get(f"{PATH}project/{project_id}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -100,7 +100,7 @@ class Core:
     def get_project_dependencies(self, project_id: str):
         '''
         '''
-        self.validate_args([project_id],[str])
+        validate_var([(project_id, str)])
         
         result = requests.get(f"{PATH}project/{project_id}/dependencies", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -115,7 +115,7 @@ class Core:
         '''
         Get a team composition from 
         '''
-        self.validate_args([project_id],[str])
+        validate_var([(project_id, str)])
 
         result = requests.get(f"{PATH}project/{project_id}/members", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -126,7 +126,7 @@ class Core:
             raise NotFound(project_id, "project")
     
     def get_team(self, team_id: str):
-        self.validate_args([team_id],[str])
+        validate_var([(team_id, str)])
 
         result = requests.get(f"{PATH}project/{team_id}/members", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -137,7 +137,7 @@ class Core:
             raise NotFound(team_id, "team")
     
     def get_user(self, user_id: str):
-        self.validate_args([user_id],[str])
+        validate_var([(user_id, str)])
 
         result = requests.get(f"{PATH}user/{user_id}", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -148,7 +148,7 @@ class Core:
             raise NotFound(user_id, "user")
     
     def get_user_projects(self, user_id: str):
-        self.validate_args([user_id],[str])
+        validate_var([(project_id, str)])
 
         result = requests.get(f"{PATH}user/{user_id}/projects", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -161,7 +161,7 @@ class Core:
     def get_project_versions(self, project_id: str):
         '''
         '''
-        self.validate_args([project_id],[str])
+        validate_var([(project_id, str)])
 
         result = requests.get(f"{PATH}project/{project_id}/version", headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -174,7 +174,7 @@ class Core:
     def get_version(self, version_id: str):
         '''
         '''
-        self.validate_args([version_id],[str])
+        validate_var([(version_id, str)])
 
         result = requests.get(f'{PATH}version/{version_id}', headers={'Authorization': self.token})
         self.update_ratelimit_info(result.headers)
@@ -209,7 +209,7 @@ class Core:
     ''' MODIFY REQUESTS '''
 
     def edit_profile(self, username, email = "", displayname = "", bio = ""):
-        self.validate_args([username, email, displayname, bio], [str,str,str,str])
+        validate_var([(username, str),(email, str),(displayname, str),(bio, str)])
 
         payload = {'username' : username}
         if not email == '': payload['email'] = email
@@ -224,16 +224,6 @@ class Core:
         elif response.status_code == 400:
             print(response.status_code)
             raise BadPayload("Bad data", f'{response.text}')
-
-    ''' OTHER FUCNTIONS '''
-
-    def validate_args(self, args: list, types: list):
-        '''
-        Used to validate the arguments for functions. Catches bad data before it's used
-        '''
-        for index in range(len(args)):
-            if not type(args[index]) == types[index]:
-                raise ArgError(index, type(args[index]), types[index])
 
 
 def init_data_object(source, class_type, input):
