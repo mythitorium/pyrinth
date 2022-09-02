@@ -13,7 +13,7 @@ class BadPayload(Exception):
         super().__init__(f'Sent invalid or unusable data{details}')
 
 
-class ArgError(Exception):
+class InvalidArg(Exception):
     '''
     General exception raised when invalid information is given to a function
     '''

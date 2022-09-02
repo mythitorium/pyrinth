@@ -19,7 +19,7 @@ from datetime import *
 import re
 
 
-def validate_var(vars = []):
+def validate_vars(vars = []):
     '''
     Used to validate the arguments for functions. Catches bad data before it's used
     '''
