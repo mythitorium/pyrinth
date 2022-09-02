@@ -52,3 +52,11 @@ class RateLimited(Exception):
     def __init__(self, cooldown):
         self.cooldown = cooldown
         super().__init__(f'Too many requests. Window reset in {cooldown:.2f} seconds')
+
+
+class InvalidTimestamp(Exception):
+    '''
+    Raised when a timestamp string given isn't formatted to iso-8601
+    '''
+    def __init__(self, time_string):
+        super().__init__(f'{time_string} must be of iso format')
