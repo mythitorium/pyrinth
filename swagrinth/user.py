@@ -2,11 +2,10 @@
 Classes related to users and teams
 '''
 
-from .base import *
 from inspect import *
+from .objecthandler import *
 
-
-class Team(BaseClass):
+class Team():
     '''
     Represents a modrinth team.
     A team is a collection of one or more users who own/manage a project
@@ -16,7 +15,7 @@ class Team(BaseClass):
         self.id = input[0]['team_id']
 
 
-class TeamMember(BaseClass):
+class TeamMember():
     '''
     Represents a member of a team.
     Team members are made up of a user and metadata about their role in the team
@@ -29,16 +28,15 @@ class TeamMember(BaseClass):
         self.accepted = input['accepted']
     
 
-class User(BaseClass):
+class User():
     '''
     Represents a modrinth user
     '''
     def __init__(self, input):
-        print(locals())
-        self.set_bulk_attr(self, input)
+        bulk_attr_set(self, locals())
 
 
-class MemberPerms(BaseClass):
+class MemberPerms():
     '''
     Represents a team member's permissions
     Turns a bitflag into a bunch of booleans
@@ -53,7 +51,7 @@ class MemberPerms(BaseClass):
                 setattr(self, attributes[index], bool(input[index]))
 
 
-class Notification(BaseClass):
+class Notification():
     '''
     Represents a user notification
     '''

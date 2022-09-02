@@ -2,10 +2,9 @@
 Project class and sub classes
 '''
 
-from .base import *
+from .objecthandler import *
 
-
-class Project(BaseClass):
+class Project():
     '''
     Represents a modrinth project, either a mod or a modpack
     '''
@@ -16,7 +15,7 @@ class Project(BaseClass):
         self.gallery = [Image(image) for image in input['gallery']]
 
 
-class SearchResult(BaseClass):
+class SearchResult():
     '''
     Represents a search result.
     Searching modrinth's mod list will return a list of mods given the request query parameters
@@ -26,7 +25,7 @@ class SearchResult(BaseClass):
         self.total_hits = input["total_hits"]
 
 
-class ProjectListing(BaseClass):
+class ProjectListing():
     '''
     A variation of the Project class
     This class exists because the structure and composition of project data returned from a search query 
@@ -38,7 +37,7 @@ class ProjectListing(BaseClass):
         self.updated_at = input['date_modified']
 
 
-class ProjectVersion(BaseClass):
+class ProjectVersion():
     '''
     Represents a project 'version'
     Contains information about a specific mod release, dependencies, and any given download files
@@ -49,7 +48,7 @@ class ProjectVersion(BaseClass):
         self.dependencies = [Dependency(e) for i in input['dependencies']]
 
 
-class ProjectFile(BaseClass):
+class ProjectFile():
     '''
     Represents a downloadable file within a project version
     '''
@@ -59,7 +58,7 @@ class ProjectFile(BaseClass):
         self.hash_sha1 = input['hashes']['sha1']
 
 
-class Dependency(BaseClass):
+class Dependency():
     '''
     Represents a 'dependency' for a project version, information pointing to another project
     '''
@@ -73,7 +72,7 @@ class Dependency(BaseClass):
             self.id = input['project_id']
 
 
-class DependencyList(BaseClass):
+class DependencyList():
     '''
     Represents a collection of all dependencies a project has
     '''
@@ -82,7 +81,7 @@ class DependencyList(BaseClass):
         self.versions = [ProjectVersion(version) for version in input['versions']]
 
 
-class Image(BaseClass):
+class Image():
     '''
     Represents a gallery image
     '''
@@ -90,7 +89,7 @@ class Image(BaseClass):
         self.set_bulk_attr(self, input)
 
 
-class License(BaseClass):
+class License():
     '''
     Represents a project's copyright license
     ''' 
@@ -98,7 +97,7 @@ class License(BaseClass):
         self.set_bulk_attr(self, input)
 
 
-class DonationSite(BaseClass):
+class DonationSite():
     '''
     Represents a donation site a project may have
     '''
@@ -106,7 +105,7 @@ class DonationSite(BaseClass):
         self.set_bulk_attr(self, input)
 
 
-class ModMessage(BaseClass):
+class ModMessage():
     '''
     Represents a mod message on a project
     '''
