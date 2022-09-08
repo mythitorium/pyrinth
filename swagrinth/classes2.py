@@ -7,6 +7,7 @@ from .handler import *
 from inspect import isclass
 from .formatting import *
 from .errors import *
+import copy
 
 
 class BaseObject():
@@ -38,7 +39,8 @@ class BaseObject():
         - blueprint indexes should be formatted as (attribute_name, default_value, nested default value)
         - correction indexes should be formatted as (expected_name, replacement_name)
         '''
-        def compare_values(item, current_value, bp_value):
+        def compare_values(item, current_value, bp_value, level = 1):
+            print(item)
             '''
             Encapsulated comparison logic that validates and configures an input 
             '''
@@ -55,7 +57,7 @@ class BaseObject():
             else: # Regular data type
                 if isinstance(current_value, type(bp_value)):
                     if type(current_value) == list and len(current_value) > 0: # We do a little bit of recursion lololol
-                        return [compare_values(item + ' contents', cv_i, bp_value[0]) for cv_i in current_value] # Handles the contents of an array
+                        return [compare_values(item + ' contents', cv_i, bp_value[0], level + 1) for cv_i in current_value] # Handles the contents of an array
                     else:
                         return current_value # No special action
                 else: # Didn't match, L
@@ -67,7 +69,9 @@ class BaseObject():
         # NOTE: To do: Add funny p_ filtering
 
         data = input_data
-        blueprint = blueprint_plan
+        blueprint = copy.deepcopy(blueprint_plan)
+        # NOTE: I need to make a deep copy of blueprint_plan or somehow it gets overwritten and things crash.
+        # I have no fucking clue as to why. I can't figure it out, but it works with but fails without, so there it stays
 
         # Get classes from strings
         # The 'blueprint' variables from formatting.py are designed to contain data class references in order to make creating nested classes much easier.
@@ -75,6 +79,7 @@ class BaseObject():
         # String names are now where the references were, and these references are put in place here
         globals_ = globals()
         for item in blueprint:
+            
             value = blueprint[item]
             is_list = False
             if type(value) == list and len(value) > 0:
@@ -87,7 +92,6 @@ class BaseObject():
                 else:
                     blueprint[item] = globals_[value]
                 
-                print(globals_[value])
 
 
         # Apply corrections
@@ -125,12 +129,43 @@ class User(BaseObject):
     '''
     Represents a modrinth user
     '''
-
     def __init__(self, **args):
         self._build(args, BP_USER, FIX_USER)
 
         # Replace the string with a datetime
         self.created_at = datetime.fromisoformat(self.created_at[0:23])
+
+
+class Team(BaseObject):
+    '''
+    Represents a modrinth team, a collection of users which manage or own a project
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_TEAM)
+
+
+class TeamMember(BaseObject):
+    '''
+    Represents a member on a team, a user with extra information regarding the team they're on
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_TEAM_MEMBER)
+
+
+class MemberPerms(BaseObject):
+    '''
+    Team members have permissions regarding what actions they can undertake, this class encapsulates them for easier handling
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_MEMBER_PERMS)
+
+
+class Notification(BaseObject):
+    '''
+    Represents a user's notification on modrinth
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_NOTIFICATION)
 
 
 '''
@@ -142,6 +177,7 @@ Project Related Classes
 +=+=+
 +=+
 '''
+
 
 class Project(BaseObject):
     '''
@@ -174,14 +210,4 @@ class ModMessage(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_MOD_MESSAGE)
-
-
-
-
-
-
-
-
-
-
 
