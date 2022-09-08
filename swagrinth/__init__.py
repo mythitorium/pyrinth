@@ -98,6 +98,7 @@ class Client:
 
         return User(loads(result.text))
 
+
     def get_project(self, project_id: str):
         validate_object([project_id], str)
 
@@ -105,8 +106,27 @@ class Client:
         self._update_ratelimit_info(result.headers)
         self._check_response(result, f"Project by id/slug '{project_id}'")
 
-        print(type(loads(result.text)))
         return Project(**loads(result.text))
+
+
+    def get_team(self, team_id: str):
+        validate_object([team_id], str)
+
+        result = requests.get(f'{PATH}team/{team_id}', headers=self._auth_header)
+        self._update_ratelimit_info(result.headers)
+        self._check_response(result, f"Team by id/slug '{team_id}'")
+
+        return Team(**{'members' : loads(result.text)})
+
+
+    def get_project_team(self, project_id: str):
+        validate_object([project_id], str)
+
+        result = requests.get(f'{PATH}project/{project_id}/members', headers=self._auth_header)
+        self._update_ratelimit_info(result.headers)
+        self._check_response(result, f"Team by project id/slug '{project_id}'")
+
+        return Team(**{'members' : loads(result.text)})
 
 
 
