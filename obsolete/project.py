@@ -2,7 +2,7 @@
 Project class and sub classes
 '''
 
-from .objecthandler import *
+from .handler import *
 
 class Project():
     '''

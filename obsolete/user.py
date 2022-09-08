@@ -3,7 +3,7 @@ Classes related to users and teams
 '''
 
 from inspect import *
-from .objecthandler import *
+from .handler import *
 
 class Team():
     '''
