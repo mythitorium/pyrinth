@@ -36,29 +36,25 @@ class Client:
             self.get_self()
     
 
-    def set_auth(self, token, get_self=False):
-        self.token = token
-        self._auth_header = {'Authorization': self.token}
-        if get_self: self.get_self()
-    
-
-    def get_self(self, return_copy=False):
-        result = requests.get(f'{PATH}user', headers=self._auth_header)
+    def _handle_request(endpoint: str, info: str):
+        '''
+        Does the thing with the requests and the other thing
+        So I don't have write this crap a million times
+        '''
+        # Get data
+        result = requests.get(f'{PATH}{endpoint}', headers=self._auth_header)
+        # Update rate limit vars
         self._update_ratelimit_info(result.headers)
-        self._check_response(result, 'User by token')
+        # Check response
+        self._check_response(result, info)
 
-        self.self = User(loads(result.text))
-        if return_copy: return User(loads(result.text))
+        return loads(result.text)
 
 
     def _update_ratelimit_info(self, headers):
         self.ratelimit = headers['X-Ratelimit-Limit']
         self.remaining = headers['X-Ratelimit-Remaining']
         self.next_refresh = headers['X-Ratelimit-Reset']
-
-
-    def get_ratelimit(self):
-        return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
 
 
     def _check_response(self, response, info):
@@ -73,6 +69,22 @@ class Client:
             raise NotFound(f'Data about {info} not found')
 
 
+    def set_auth(self, token, get_self=False):
+        self.token = token
+        self._auth_header = {'Authorization': self.token}
+        if get_self: self.get_self()
+    
+
+    def get_self(self, return_copy=False):
+        data = _handle_request('user', 'User by token')
+        self.self = User(data)
+        if return_copy: return User(data)
+
+
+    def get_ratelimit(self):
+        return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
+
+
     def search(self, query, offset=0, limit=10):
         '''
         Requests a search on modrinth's database
@@ -82,51 +94,35 @@ class Client:
         validate_object([query], str)
         validate_object([offset, limit], int)
 
-        result = requests.get(f'{PATH}search?query={query}&offset={offset}&limit={limit}', headers=self._auth_header)
-        self._update_ratelimit_info(result.headers)
-        self._check_response(result, f"Search by query '{query}'")
-
-        return SearchResult(loads(result.text))
+        data = _handle_request(f'{PATH}search?query={query}&offset={offset}&limit={limit}', f"Search by query '{query}'")
+        return SearchResult(data)
 
 
     def get_user(self, user_id: str):
         validate_object([user_id], str)
 
-        result = requests.get(f'{PATH}user/{user_id}', headers=self._auth_header)
-        self._update_ratelimit_info(result.headers)
-        self._check_response(result, f"User by id/slug '{user_id}'")
-
-        return User(loads(result.text))
+        data = _handle_request(f'{PATH}user/{user_id}', f"User by id/slug '{user_id}'")
+        return User(data)
 
 
     def get_project(self, project_id: str):
         validate_object([project_id], str)
 
-        result = requests.get(f'{PATH}project/{project_id}', headers=self._auth_header)
-        self._update_ratelimit_info(result.headers)
-        self._check_response(result, f"Project by id/slug '{project_id}'")
-
-        return Project(**loads(result.text))
+        data = _handle_request(f'project/{project_id}', f"Project by id/slug '{project_id}'")
+        return Project(**data)
 
 
     def get_team(self, team_id: str):
         validate_object([team_id], str)
 
-        result = requests.get(f'{PATH}team/{team_id}', headers=self._auth_header)
-        self._update_ratelimit_info(result.headers)
-        self._check_response(result, f"Team by id/slug '{team_id}'")
-
-        return Team(**{'members' : loads(result.text)})
+        data = _handle_request(f'team/{team_id}', f"Team by id/slug '{team_id}'")
+        return Team(**{'members' : data})
 
 
     def get_project_team(self, project_id: str):
         validate_object([project_id], str)
 
-        result = requests.get(f'{PATH}project/{project_id}/members', headers=self._auth_header)
-        self._update_ratelimit_info(result.headers)
-        self._check_response(result, f"Team by project id/slug '{project_id}'")
-
-        return Team(**{'members' : loads(result.text)})
-
+        data = _handle_request(f'project/{project_id}/members', f"Team by project id/slug '{project_id}'")
+        return Team(**{'members' : data})
 
 
