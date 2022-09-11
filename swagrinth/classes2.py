@@ -40,7 +40,7 @@ class BaseObject():
         - correction indexes should be formatted as (expected_name, replacement_name)
         '''
         def compare_values(item, current_value, bp_value, level = 1):
-            print(item)
+            print(f'{level} : {item} : {current_value} : {bp_value}')
             '''
             Encapsulated comparison logic that validates and configures an input 
             '''
@@ -65,8 +65,7 @@ class BaseObject():
                         return bp_value
                     else:
                         raise ObjectInitError(f'Item {item} contains value of type {type(current_value)}, expected {type(bp_value)}')
-
-        # NOTE: To do: Add funny p_ filtering
+        
 
         data = input_data
         blueprint = copy.deepcopy(blueprint_plan)
@@ -76,7 +75,7 @@ class BaseObject():
         # Get classes from strings
         # The 'blueprint' variables from formatting.py are designed to contain data class references in order to make creating nested classes much easier.
         # However, this requires formatting.py to import this script, which causes a circular import error. 
-        # String names are now where the references were, and these references are put in place here
+        # As a workaround, String names are now where the references were, and these references are put in place here
         globals_ = globals()
         for item in blueprint:
             
@@ -91,13 +90,17 @@ class BaseObject():
                     blueprint[item] = [globals_[value]]
                 else:
                     blueprint[item] = globals_[value]
-                
-
-
+        
         # Apply corrections
         for fix in corrections: # Note: fix is a key
             if fix in data.keys():
                 data[corrections[fix]] = data.pop(fix)
+        
+        # Some blueprint objects start with a p_, denoting their usage in a post or patch payload. 
+        # These prefixes muck up the works big time over here, so they gotta be removed
+        for item in blueprint:
+            if item[0:1] == 'p_':
+                blueprint[item[2:]] = blueprint.pop(item) 
     
         # Constructs a new blueprint using info from data, plus validation
         for item in blueprint:
@@ -105,7 +108,7 @@ class BaseObject():
                 blueprint[item] = compare_values(item, data[item], blueprint[item])
             else: 
                 # Blueprint list values typically have something in them (like a class reference) for expected list contents to validate
-                # This replaces the filled list with an empty one
+                # This replaces the filled list with an empty one for usage as a default
                 if isinstance(blueprint[item], list):
                     blueprint[item] = []
     
@@ -149,15 +152,7 @@ class TeamMember(BaseObject):
     Represents a member on a team, a user with extra information regarding the team they're on
     '''
     def __init__(self, **args):
-        self._build(args, BP_TEAM_MEMBER)
-
-
-class MemberPerms(BaseObject):
-    '''
-    Team members have permissions regarding what actions they can undertake, this class encapsulates them for easier handling
-    '''
-    def __init__(self, **args):
-        self._build(args, BP_MEMBER_PERMS)
+        self._build(args, BP_TEAM_MEMBER, FIX_TEAM_MEMBER)
 
 
 class Notification(BaseObject):
@@ -210,4 +205,39 @@ class ModMessage(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_MOD_MESSAGE)
+
+
+'''
++=+
++=+=+
+
+Version & File Related Classes 
+
++=+=+
++=+
+'''
+
+
+class Version(BaseObject):
+    '''
+    Represents a a version release on a project
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_VERSION, FIX_VERSION)
+
+
+class VersionFile(BaseObject):
+    '''
+    Represents a file attached to a version
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_VERSION_FILE, FIX_VERSION_FILE)
+
+
+class Dependency(BaseObject):
+    '''
+    Some versions have mod dependencies. This represents one
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_DEPENDENCY, FIX_DEPENDENCY)
 

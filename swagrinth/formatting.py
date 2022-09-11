@@ -2,6 +2,18 @@
 Formatting.py
 
 Centralized place for defining how data classes are dynamically initialized
+
+
+NOTE
+Hey listen up future me, so you don't fuck up on some stupid shit like formatting in the future
+Which I know you will otherwise because you'll stop working on this for 4 weeks to play fucking minecraft and watch youtube 
+
+1. Corrections vars: {'expected payload key' : 'replacement key'} <- Make sure the replacement key is what is listed in the respective blueprint var
+2. Blueprint vars: {'key' : 'default value & expected type'} 
+    - Make sure all class references are in strings, _build takes care of it
+    - Handling arrays is simple: put <default value & expected type> inside of a array
+
+There ya go dumbass have fun
 '''
 
 
@@ -15,8 +27,8 @@ BP_PROJECT = {                            #
     'client_side' : '',                   #
     'server_side' : '',                   #
 
-    'catagories': [{}],                   #
-    'additional_categories' : [{}],       #
+    'catagories': [''],                   #
+    'additional_categories' : [''],       #
     
     'issues_url' : '',                    #
     'source_url' : '',                    #
@@ -36,7 +48,7 @@ BP_PROJECT = {                            #
     'approved_at' : '',                   #
 
     'license': {},                        #
-    'versions' : [str],                   #
+    'versions' : [''],                   #
     'gallery': [{}],                      #
 }
 
@@ -73,12 +85,8 @@ BP_TEAM_MEMBER = {
     'team_id' : '',                       #
     'user' : 'User',                      #
     'role' : '',                          #
-    'perms' : 0,                   #
+    'perms' : 0,                          #
     'accepted' : False                    #
-}
-
-BP_MEMBER_PERMS = {
-    'bitfield' : 0        #
 }
 
 FIX_NOTIFICATION = {'created' : 'created_at', 'text' : 'body', 'link' : 'url'}
@@ -92,4 +100,39 @@ BP_NOTIFICATION = {
     'read' : False,                       #
     'created_at' : ''                     #
     # NOTE: TO-DO Figure out and add 'actions'
+}
+
+FIX_VERSION = {'date_published' : 'created_at'}
+BP_VERSION = {
+    'name' : '',
+    'version_number' : '',
+    'changelog' : '',
+    'dependencies' : ['Dependency'],
+    'game_versions' : [''],
+    'version_type' : '',
+    'loaders' : [''],
+    'is_featured' : False,
+    'id' : '',
+    'project_id' : '',
+    'author_id' : '',
+    'created_at' : '',
+    'downloads' : 0,
+    'files' : ['VersionFile']
+}
+
+FIX_VERSION_FILE = {'size' : 'file_size'}
+BP_VERSION_FILE = {
+    'hashes' : {},
+    'url' : '',
+    'name' : '',
+    'primary' : False,
+    'file_size' : 0,
+}
+
+FIX_DEPENDENCY = {'file_name' : 'name', 'dependency_type' : 'type'}
+BP_DEPENDENCY = {
+    'version_id' : '',
+    'project_id' : '',
+    'name' : '',
+    'type' : '',
 }
