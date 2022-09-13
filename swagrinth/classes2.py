@@ -40,7 +40,6 @@ class BaseObject():
         - correction indexes should be formatted as (expected_name, replacement_name)
         '''
         def compare_values(item, current_value, bp_value, level = 1):
-            print(f'{level} : {item} : {current_value} : {bp_value}')
             '''
             Encapsulated comparison logic that validates and configures an input 
             '''
@@ -69,8 +68,7 @@ class BaseObject():
 
         data = input_data
         blueprint = copy.deepcopy(blueprint_plan)
-        # NOTE: I need to make a deep copy of blueprint_plan or somehow it gets overwritten and things crash.
-        # I have no fucking clue as to why. I can't figure it out, but it works with but fails without, so there it stays
+        # Remember to deep copy
 
         # Get classes from strings
         # The 'blueprint' variables from formatting.py are designed to contain data class references in order to make creating nested classes much easier.
@@ -116,6 +114,9 @@ class BaseObject():
         for item in blueprint:
             setattr(self, item, blueprint[item])
 
+        
+
+    def _payload(self): pass
 
 '''
 +=+
@@ -179,7 +180,6 @@ class Project(BaseObject):
     Represents a modrinth project
     '''
     def __init__(self, **args):
-        print(len(args))
         self._build(args, BP_PROJECT, FIX_PROJECT)
 
         # Replace the strings with datetime objects
@@ -205,6 +205,29 @@ class ModMessage(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_MOD_MESSAGE)
+
+
+class Image(BaseObject):
+    '''
+    Represents a gallery image attached to a project
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_IMAGE, FIX_IMAGE)
+
+
+class License(BaseObject):
+    def __init__(self, **args):
+        self._build(args, BP_LICENSE)
+
+
+class ProjectListing(BaseObject):
+    def __init__(self, **args):
+        self._build(args, BP_PROJECT_LISTING)
+
+
+class SearchResult(BaseObject):
+    def __init__(self, **args):
+        self._build(args, BP_SEARCH_RESULT)
 
 
 '''

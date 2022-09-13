@@ -47,9 +47,39 @@ BP_PROJECT = {                            #
     'modified_at' : '',                   #
     'approved_at' : '',                   #
 
-    'license': {},                        #
+    'license': 'License',                        #
     'versions' : [''],                   #
-    'gallery': [{}],                      #
+    'gallery': ['Image'],                      #
+}
+
+BP_SEARCH_RESULT = {
+    'hits' : ['ProjectListing'],
+    'offset' : 0,
+    'limit' : 0,
+    'total_hits' : 0,
+}
+
+FIX_PROJECT_LISTING = {'follows' : 'followers', 'date_created' : 'created_at', 'date_modified' : 'modified_at'}
+BP_PROJECT_LISTING = {
+    'slug' : '',
+    'title' : '',
+    'description' : '',
+    'categories' : [''],
+    'client_side' : '',
+    'server_side' : '',
+    'project_type' : '',
+    'downloads' : 0,
+    'icon_url' : '',
+    'project_id' : '',
+    'author' : '',
+    'display_categories' : [''],
+    'versions' : [''],
+    'followers' :  0,
+    'created_at' : '',
+    'modified_at' : '',
+    'latest_version' : '',
+    'license' : '',
+    'gallery' : [''],
 }
 
 BP_DONATION_SITE = {
@@ -117,7 +147,7 @@ BP_VERSION = {
     'author_id' : '',
     'created_at' : '',
     'downloads' : 0,
-    'files' : ['VersionFile']
+    'files' : ['VersionFile'],
 }
 
 FIX_VERSION_FILE = {'size' : 'file_size'}
@@ -135,4 +165,20 @@ BP_DEPENDENCY = {
     'project_id' : '',
     'name' : '',
     'type' : '',
+}
+
+FIX_IMAGE = {'created', 'created_at'}
+BP_IMAGE = {
+    'url' : '',
+    'title' : '',
+    'description' : '',
+    'createdD_at' : '',
+    'featured' : False
+}
+
+
+BP_LICENSE = {
+    'id' : '',
+    'name' : '',
+    'url' : '',
 }
