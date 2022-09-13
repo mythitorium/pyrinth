@@ -36,7 +36,7 @@ class Client:
             self.get_self()
     
 
-    def _handle_request(endpoint: str, info: str):
+    def _handle_request(self, endpoint: str, info: str):
         '''
         Does the thing with the requests and the other thing
         So I don't have write this crap a million times
@@ -69,17 +69,10 @@ class Client:
             raise NotFound(f'Data about {info} not found')
 
 
-    def set_auth(self, token, get_self=False):
+    def set_auth(self, token):
         self.token = token
         self._auth_header = {'Authorization': self.token}
-        if get_self: self.get_self()
     
-
-    def get_self(self, return_copy=False):
-        data = _handle_request('user', 'User by token')
-        self.self = User(data)
-        if return_copy: return User(data)
-
 
     def get_ratelimit(self):
         return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
@@ -91,38 +84,43 @@ class Client:
 
         # DO TO: Implement facets and filters
         '''
-        validate_object([query], str)
-        validate_object([offset, limit], int)
+        valid_type_table = {'query' : (query, str), 'offset' : (offset, int), 'limit' : (limit, int)}
+        validate_objects(valid_type_table)
 
-        data = _handle_request(f'{PATH}search?query={query}&offset={offset}&limit={limit}', f"Search by query '{query}'")
-        return SearchResult(data)
-
-
-    def get_user(self, user_id: str):
-        validate_object([user_id], str)
-
-        data = _handle_request(f'{PATH}user/{user_id}', f"User by id/slug '{user_id}'")
-        return User(data)
+        data = self._handle_request(f'{PATH}search?query={query}&offset={offset}&limit={limit}', f"Search by query '{query}'")
+        return SearchResult(**data)
 
 
-    def get_project(self, project_id: str):
-        validate_object([project_id], str)
+    def get(self, get_type: str, target_id = ''):
+        # Lookup table
+        # type : endpoint, return type, debug info
+        req_lookup = {
+            'project' :      (f'project/{target_id}',              Project,  f"Project by id/slug '{target_id}'"),
+            'user' :         (f'user/{target_id}',                 User,     f"User by id/slug '{target_id}'"),
+            'team' :         (f'user/{target_id}',                 Team,     f"Team by id/slug '{target_id}'"),
+            'team_project' : (f'project/{target_id}/members',      Team,     f"Team by project id/slug '{target_id}'"),
+            'version' :      (f'version/{target_id}',              Version,  f"Version by id/slug '{target_id}'"),
+#           'dependencies' : (f'project/{target_id}/dependencies', Project,  f"Project by id/slug '{target_id}'"),
+            'self' :         (f'user',                             User,     f"User by token"),
+        }
 
-        data = _handle_request(f'project/{project_id}', f"Project by id/slug '{project_id}'")
-        return Project(**data)
+        # Error handling
+        if not get_type in req_lookup.keys():
+            raise TypeError(f"Get_type value '{get_type}' isn't valid")
+        valid_type_table = {'get_type' : (get_type, str), 'target_id' : (target_id, str)}   
+        validate_objects(valid_type_table)
+        
+        # Request handling
+        req_info = req_lookup[get_type]
+        result = requests.get(f'{PATH}{req_info[0]}', headers={'Authorization': self.token})
+        self._update_ratelimit_info(result.headers)
+        self._check_response(result, req_info[2])
 
-
-    def get_team(self, team_id: str):
-        validate_object([team_id], str)
-
-        data = _handle_request(f'team/{team_id}', f"Team by id/slug '{team_id}'")
-        return Team(**{'members' : data})
-
-
-    def get_project_team(self, project_id: str):
-        validate_object([project_id], str)
-
-        data = _handle_request(f'project/{project_id}/members', f"Team by project id/slug '{project_id}'")
-        return Team(**{'members' : data})
+        # Object building
+        data = loads(result.text)
+        if req_info[1] == Team: # Team needs to be built differently
+            return Team(**{'members' : data})
+        else:
+            return req_info[1](**data)
 
 
