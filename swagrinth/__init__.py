@@ -20,35 +20,12 @@ class Client:
     '''
     Main class for handling, sending, and requesting data
     '''
-    def __init__(self, token="", get_self=False):
+    def __init__(self, token=""):
         self.token = token
-        self._auth_header = {'Authorization': self.token}
 
         self.ratelimit = -1
         self.remaining = -1
         self.next_refresh = -1
-
-        self.status = None
-
-        if not get_self:
-            self.self = None
-        else: 
-            self.get_self()
-    
-
-    def _handle_request(self, endpoint: str, info: str):
-        '''
-        Does the thing with the requests and the other thing
-        So I don't have write this crap a million times
-        '''
-        # Get data
-        result = requests.get(f'{PATH}{endpoint}', headers=self._auth_header)
-        # Update rate limit vars
-        self._update_ratelimit_info(result.headers)
-        # Check response
-        self._check_response(result, info)
-
-        return loads(result.text)
 
 
     def _update_ratelimit_info(self, headers):
@@ -71,7 +48,6 @@ class Client:
 
     def set_auth(self, token):
         self.token = token
-        self._auth_header = {'Authorization': self.token}
     
 
     def get_ratelimit(self):
@@ -87,21 +63,24 @@ class Client:
         valid_type_table = {'query' : (query, str), 'offset' : (offset, int), 'limit' : (limit, int)}
         validate_objects(valid_type_table)
 
-        data = self._handle_request(f'{PATH}search?query={query}&offset={offset}&limit={limit}', f"Search by query '{query}'")
-        return SearchResult(**data)
+        results = requests.get(f'{PATH}search?query={query}&offset={offset}&limit={limit}', headers={'Authorization': self.token})
+        self._update_ratelimit_info(result.headers)
+        self._check_response(result, f"Search by query '{query}'")
+
+        return SearchResult(**loads(result.text))
 
 
     def get(self, get_type: str, target_id = ''):
         # Lookup table
         # type : endpoint, return type, debug info
         req_lookup = {
-            'project' :      (f'project/{target_id}',              Project,  f"Project by id/slug '{target_id}'"),
-            'user' :         (f'user/{target_id}',                 User,     f"User by id/slug '{target_id}'"),
-            'team' :         (f'user/{target_id}',                 Team,     f"Team by id/slug '{target_id}'"),
-            'team_project' : (f'project/{target_id}/members',      Team,     f"Team by project id/slug '{target_id}'"),
-            'version' :      (f'version/{target_id}',              Version,  f"Version by id/slug '{target_id}'"),
-#           'dependencies' : (f'project/{target_id}/dependencies', Project,  f"Project by id/slug '{target_id}'"),
-            'self' :         (f'user',                             User,     f"User by token"),
+            'project' :      (f'project/{target_id}',               Project,         f"Project by id/slug '{target_id}'"),
+            'user' :         (f'user/{target_id}',                  User,            f"User by id/slug '{target_id}'"),
+            'team' :         (f'user/{target_id}',                  Team,            f"Team by id '{target_id}'"),
+            'team_project' : (f'project/{target_id}/members',       Team,            f"Team by project id/slug '{target_id}'"),
+            'version' :      (f'version/{target_id}',               Version,         f"Version by id '{target_id}'"),
+            'dependencies' : (f'project/{target_id}/dependencies',  DependencyList,  f"Project by id/slug '{target_id}'"),
+            'self' :         (f'user',                              User,            f"User by token"),
         }
 
         # Error handling
