@@ -47,39 +47,39 @@ BP_PROJECT = {                            #
     'modified_at' : '',                   #
     'approved_at' : '',                   #
 
-    'license': 'License',                        #
-    'versions' : [''],                   #
-    'gallery': ['Image'],                      #
+    'license': 'License',                 #
+    'versions' : [''],                    #
+    'gallery': ['Image'],                 #
 }
 
 BP_SEARCH_RESULT = {
-    'hits' : ['ProjectListing'],
-    'offset' : 0,
-    'limit' : 0,
-    'total_hits' : 0,
+    'hits' : ['ProjectListing'],          #
+    'offset' : 0,                         #
+    'limit' : 0,                          #
+    'total_hits' : 0,                     #
 }
 
 FIX_PROJECT_LISTING = {'follows' : 'followers', 'date_created' : 'created_at', 'date_modified' : 'modified_at'}
 BP_PROJECT_LISTING = {
-    'slug' : '',
-    'title' : '',
-    'description' : '',
-    'categories' : [''],
-    'client_side' : '',
-    'server_side' : '',
-    'project_type' : '',
-    'downloads' : 0,
-    'icon_url' : '',
-    'project_id' : '',
-    'author' : '',
-    'display_categories' : [''],
-    'versions' : [''],
-    'followers' :  0,
-    'created_at' : '',
-    'modified_at' : '',
-    'latest_version' : '',
-    'license' : '',
-    'gallery' : [''],
+    'slug' : '',                          #
+    'title' : '',                         #
+    'description' : '',                   #
+    'categories' : [''],                  #
+    'client_side' : '',                   #
+    'server_side' : '',                   #
+    'project_type' : '',                  #
+    'downloads' : 0,                      #
+    'icon_url' : '',                      #
+    'project_id' : '',                    #
+    'author' : '',                        #
+    'display_categories' : [''],          #
+    'versions' : [''],                    #
+    'followers' :  0,                     #
+    'created_at' : '',                    #
+    'modified_at' : '',                   #
+    'latest_version' : '',                #
+    'license' : '',                       #
+    'gallery' : [''],                     #
 }
 
 BP_DONATION_SITE = {
@@ -134,51 +134,55 @@ BP_NOTIFICATION = {
 
 FIX_VERSION = {'date_published' : 'created_at'}
 BP_VERSION = {
-    'name' : '',
-    'version_number' : '',
-    'changelog' : '',
-    'dependencies' : ['Dependency'],
-    'game_versions' : [''],
-    'version_type' : '',
-    'loaders' : [''],
-    'is_featured' : False,
-    'id' : '',
-    'project_id' : '',
-    'author_id' : '',
-    'created_at' : '',
-    'downloads' : 0,
-    'files' : ['VersionFile'],
+    'name' : '',                          #
+    'version_number' : '',                #
+    'changelog' : '',                     #
+    'dependencies' : ['Dependency'],      #
+    'game_versions' : [''],               #
+    'version_type' : '',                  #
+    'loaders' : [''],                     #
+    'is_featured' : False,                #
+    'id' : '',                            #
+    'project_id' : '',                    #
+    'author_id' : '',                     #
+    'created_at' : '',                    #
+    'downloads' : 0,                      #
+    'files' : ['VersionFile'],            #
 }
 
 FIX_VERSION_FILE = {'size' : 'file_size'}
 BP_VERSION_FILE = {
-    'hashes' : {},
-    'url' : '',
-    'name' : '',
-    'primary' : False,
-    'file_size' : 0,
+    'hashes' : {},                        #
+    'url' : '',                           #
+    'name' : '',                          #
+    'primary' : False,                    #
+    'file_size' : 0,                      #
 }
 
 FIX_DEPENDENCY = {'file_name' : 'name', 'dependency_type' : 'type'}
 BP_DEPENDENCY = {
-    'version_id' : '',
-    'project_id' : '',
-    'name' : '',
-    'type' : '',
+    'version_id' : '',                    #
+    'project_id' : '',                    #
+    'name' : '',                          #
+    'type' : '',                          #
+}
+
+BP_DEPENDENCY_LIST = {
+    'projects' : ['Project'],             #
+    'versions' : ['Versions'],            #
 }
 
 FIX_IMAGE = {'created', 'created_at'}
 BP_IMAGE = {
-    'url' : '',
-    'title' : '',
-    'description' : '',
-    'createdD_at' : '',
-    'featured' : False
+    'url' : '',                           #
+    'title' : '',                         #
+    'description' : '',                   #
+    'created_at' : '',                   #
+    'featured' : False                    #
 }
 
-
 BP_LICENSE = {
-    'id' : '',
-    'name' : '',
-    'url' : '',
+    'id' : '',                            #
+    'name' : '',                          #
+    'url' : '',                           #
 }
