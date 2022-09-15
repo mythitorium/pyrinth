@@ -213,6 +213,9 @@ class Image(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_IMAGE, FIX_IMAGE)
+    
+        # Replace the strings with datetime objects
+        self.created_at = datetime.fromisoformat(self.created_at[0:23])
 
 
 class License(BaseObject):
@@ -223,6 +226,9 @@ class License(BaseObject):
 class ProjectListing(BaseObject):
     def __init__(self, **args):
         self._build(args, BP_PROJECT_LISTING)
+
+        # Replace the strings with datetime objects
+        self.created_at = datetime.fromisoformat(self.created_at[0:23])
 
 
 class SearchResult(BaseObject):
@@ -248,6 +254,9 @@ class Version(BaseObject):
     def __init__(self, **args):
         self._build(args, BP_VERSION, FIX_VERSION)
 
+        # Replace the strings with datetime objects
+        self.created_at = datetime.fromisoformat(self.created_at[0:23])
+
 
 class VersionFile(BaseObject):
     '''
@@ -263,4 +272,12 @@ class Dependency(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_DEPENDENCY, FIX_DEPENDENCY)
+
+
+class DependencyList(BaseObject):
+    '''
+    Represents a list of *all* dependencies required by a project
+    '''
+    def __init__(self, **args):
+        self._build(args, BP_DEPENDENCY_LIST)
 
