@@ -228,7 +228,7 @@ class ProjectListing(BaseObject):
         self._build(args, BP_PROJECT_LISTING)
 
         # Replace the strings with datetime objects
-        self.created_at = datetime.fromisoformat(self.created_at[0:23])
+#       self.created_at = datetime.fromisoformat(self.created_at[0:23])
 
 
 class SearchResult(BaseObject):
@@ -280,4 +280,3 @@ class DependencyList(BaseObject):
     '''
     def __init__(self, **args):
         self._build(args, BP_DEPENDENCY_LIST)
-

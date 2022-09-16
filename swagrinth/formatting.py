@@ -59,7 +59,7 @@ BP_SEARCH_RESULT = {
     'total_hits' : 0,                     #
 }
 
-FIX_PROJECT_LISTING = {'follows' : 'followers', 'date_created' : 'created_at', 'date_modified' : 'modified_at'}
+FIX_PROJECT_LISTING = {'follows' : 'followers'} # 'date_created' : 'created_at', 'date_modified' : 'modified_at'
 BP_PROJECT_LISTING = {
     'slug' : '',                          #
     'title' : '',                         #
@@ -75,8 +75,9 @@ BP_PROJECT_LISTING = {
     'display_categories' : [''],          #
     'versions' : [''],                    #
     'followers' :  0,                     #
-    'created_at' : '',                    #
-    'modified_at' : '',                   #
+    # These arn't returned in a project listing for some reason
+    #'created_at' : '',                    #
+    #'modified_at' : '',                   #
     'latest_version' : '',                #
     'license' : '',                       #
     'gallery' : [''],                     #
