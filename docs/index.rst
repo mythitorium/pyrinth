@@ -1,20 +1,43 @@
-.. Swagrinth documentation master file, created by
-   sphinx-quickstart on Wed Sep 14 22:23:26 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to Swagrinth's documentation!
-=====================================
+.. toctree::
+   Index
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :caption: Classes
+
+   Client
+   BaseObject
+   Project
+   User
+
+.. toctree::
+   :caption: Exceptions
 
 
+====
+Swagrinth Documentation
+====
 
-Indices and tables
-==================
+Swagrinth is a api wrapper for Modrinth written in python
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+What you can do:
+ - Retrieve data from modrinth's database. Projects, Users, Files, you name it
+
+What you can't do (YET!):
+ - Send data (ie modifying or creating projects)
+ - troll face (soon)
+
+I wanted to make a simple wrapper that was easy to understand and use,
+mainly because I wanted something like this for a project I was working on, but no one had yet to make anything complete in python.
+
+
+Quick Start
+====
+
+
+Reference
+====
+
+
+Help & Issues
+====
+
