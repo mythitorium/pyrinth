@@ -63,7 +63,7 @@ class Client:
         valid_type_table = {'query' : (query, str), 'offset' : (offset, int), 'limit' : (limit, int)}
         validate_objects(valid_type_table)
 
-        results = requests.get(f'{PATH}search?query={query}&offset={offset}&limit={limit}', headers={'Authorization': self.token})
+        result = requests.get(f'{PATH}search?query={query}&offset={offset}&limit={limit}', headers={'Authorization': self.token})
         self._update_ratelimit_info(result.headers)
         self._check_response(result, f"Search by query '{query}'")
 
@@ -101,5 +101,49 @@ class Client:
             return Team(**{'members' : data})
         else:
             return req_info[1](**data)
+
+
+    def get_multiple(self, get_type: str, target_ids = []):
+        # Lookup table
+        req_lookup = {
+            'users' :    (f'users?ids={target_ids}',     User,    'Erm.... what the flock...'),
+            'projects' : (f'projects?ids={target_ids}',  Project, 'Erm.... what the flock...'),
+            'versions' : (f'versions?ids={target_ids}',  Version, 'Erm.... what the flock...'),
+            'teams' :    (f'teams?ids={target_ids}',     Team, 'Erm.... what the flock...'),
+        }
+
+        # Error handling
+        if not get_type in req_lookup.keys():
+            raise TypeError(f"Get_type value '{get_type}' isn't valid")
+        valid_type_table = {'get_type' : (get_type, str), 'target_ids' : (target_ids, list)}
+        validate_objects(valid_type_table)
+        # Check the contents of target_ids
+        valid_content_table = {}
+        for ind in range(0, len(target_ids)):
+            valid_content_table[f'target_ids index {ind}'] = (target_ids[ind], str)
+        validate_objects(valid_content_table)
+
+        # Object handling
+        req_info = req_lookup[get_type]
+        # Replace ' with "
+        # Because query interpreter hates it when it gets strings denoted with '
+        new_endpoint = ''
+        for char in req_info[0]:
+            if char == "'":
+                new_endpoint += '"'
+            else:
+                new_endpoint += char
+        # Request
+        result = requests.get(f'{PATH}{new_endpoint}', headers={'Authorization': self.token})
+        self._update_ratelimit_info(result.headers)
+        self._check_response(result, req_info[2])
+
+        # Object building
+        data = loads(result.text)
+        if req_info[1] == Team: # Team needs to be built differently
+            return [req_info[1](**{'members' : subdata}) for subdata in data]
+        else:
+            return [req_info[1](**subdata) for subdata in data]
+
 
 
