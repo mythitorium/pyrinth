@@ -7,10 +7,8 @@ class BadPayload(Exception):
     '''
     Exception for when modrinth rejects a sent payload
     '''
-    def __init__(self, reason = ""):
-        details = ""
-        if not reason == "": details == f' ({reason})'
-        super().__init__(f'Sent invalid or unusable data{details}')
+    def __init__(self, reason):
+        super().__init__(reason)
 
 
 # class InvalidArg(Exception):
