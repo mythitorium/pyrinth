@@ -22,6 +22,7 @@ Swagrinth is a api wrapper for Modrinth written in python
 What you can do:
  - Retrieve data from modrinth's database. Projects, Users, Files, you name it
 
+
 What you can't do (YET!):
  - Send data (ie modifying or creating projects)
  - troll face (soon)

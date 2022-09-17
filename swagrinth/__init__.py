@@ -12,6 +12,7 @@ from .classes2 import *
 from .errors import *
 from inspect import getmembers, isclass, signature
 from .handler import *
+from .formatting import *
 
 PATH = 'https://api.modrinth.com/v2/'
 
@@ -51,6 +52,7 @@ class Client:
     
 
     def get_ratelimit(self):
+        ''' Returns rate limit info as a dict '''
         return {'ratelimit' : self.ratelimit, 'remaining' : self.remaining, 'next_refresh' : self.next_refresh}
 
 
@@ -71,6 +73,12 @@ class Client:
 
 
     def get(self, get_type: str, target_id = ''):
+        '''
+        multi-purpose get function for requesting data from modrinth
+
+        get_type : phrase to signify what endpoint data should be retrieved from
+        target_id : What data should be requested (a user, a project, etc)  
+        '''
         # Lookup table
         # type : endpoint, return type, debug info
         req_lookup = {
@@ -104,12 +112,19 @@ class Client:
 
 
     def get_multiple(self, get_type: str, target_ids = []):
+        '''
+        multi-purpose get function for requesting multiple sets of data from modrinth
+        modrinth has some built-in endpoints for getting arrays of data objects, this function utilizes them
+
+        get_type : phrase to signify what endpoint data should be retrieved from
+        target_id : What data should be requested (a user, a project, etc)
+        '''
         # Lookup table
         req_lookup = {
             'users' :    (f'users?ids={target_ids}',     User,    'Erm.... what the flock...'),
             'projects' : (f'projects?ids={target_ids}',  Project, 'Erm.... what the flock...'),
             'versions' : (f'versions?ids={target_ids}',  Version, 'Erm.... what the flock...'),
-            'teams' :    (f'teams?ids={target_ids}',     Team, 'Erm.... what the flock...'),
+            'teams' :    (f'teams?ids={target_ids}',     Team,    'Erm.... what the flock...'),
         }
 
         # Error handling
