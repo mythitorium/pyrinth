@@ -42,14 +42,16 @@ class BaseObject():
         def compare_values(item, current_value, bp_value, level = 1):
             '''
             Encapsulated comparison logic that validates and configures an input 
+
+            I am kinda proud of this lol
             '''
             if isclass(bp_value): # Is a class
-                if isinstance(current_value, bp_value):
+                if isinstance(current_value, bp_value): # Doesn't tamper with valid objects found in the input 
                     return current_value # No special action
                 else: 
                     if type(current_value) == dict: # Checks if dict cuz a new object can be created that way
                         return bp_value(**current_value) # Build object with data
-                    elif type(current_value) == type(None):
+                    elif type(current_value) == type(None): # None on an expected object is still valid, so return an empty object
                         return bp_value()
                     else: # Not instance and not a usable value (dict)
                         raise ObjectInitError(f'Item {item} contains value of type {type(current_value)}, expected {type(bp_value)} or dict')
@@ -104,11 +106,13 @@ class BaseObject():
         for item in blueprint:
             if item in data.keys():
                 blueprint[item] = compare_values(item, data[item], blueprint[item])
-            else: 
-                # Blueprint list values typically have something in them (like a class reference) for expected list contents to validate
-                # This replaces the filled list with an empty one for usage as a default
-                if isinstance(blueprint[item], list):
-                    blueprint[item] = []
+            else:
+                # Blueprint and blueprint list values typically have something in them (like a class reference)
+                # They need to be removed or turned into a default object in order not fuck up intended behavior
+                if isclass(item):
+                    blueprint[item] = blueprint[item]() # Instance as a empty object
+                elif isinstance(blueprint[item], list):
+                    blueprint[item] = [] # Turn into an empty list
     
         # Set attributes
         for item in blueprint:
