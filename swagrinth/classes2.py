@@ -194,7 +194,6 @@ class Project():
         except ValueError:
             self.approved_at = None
 
-
 class DonationSite():
     '''
     Represents a donation site listing on a project
