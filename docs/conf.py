@@ -9,6 +9,8 @@
 import sphinx_book_theme
 import sys
 import os
+import logging
+import re
 
 # Took this from discord.py's conf.py because it worked over there and it works here 
 sys.path.insert(0, os.path.abspath('..'))

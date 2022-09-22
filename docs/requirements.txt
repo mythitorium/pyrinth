@@ -1,2 +1,2 @@
 # theme
-sphinx-book-theme
+sphinx_book_theme
