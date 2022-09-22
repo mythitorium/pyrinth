@@ -3,3 +3,12 @@ code {
     border: 1px solid #dddddd;
     padding: 2px;
 }
+
+
+/* give method class and attribute headers a background and unified height*/
+.sig {
+    background-color: #f0f0f0;
+    padding-left: 8px;
+    border-radius: 9px;
+    height: 32px;
+}
