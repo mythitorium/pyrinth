@@ -6,7 +6,7 @@ Client
 
 .. class:: Client(token = '')
 
-    .. attributetable:: Client
+  
 
 
     Used to interact with modrinth's API.
