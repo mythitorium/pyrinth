@@ -3,7 +3,6 @@
 Client
 ========
 
---------------
 
 .. class:: Client(token = '')
 

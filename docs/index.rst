@@ -1,13 +1,10 @@
 Swagrinth Documentation
-==============
-
---------------
+=========================
 
 Swagrinth is a API wrapper for Modrinth, written in Python
 
 What you can do:
  - Retrieve data from modrinth's database. Projects, Users, Files, you name it
-\
 
 What you can't do (YET!):
  - Send data (ie modifying or creating projects)
@@ -60,38 +57,19 @@ I'm in the Modrinth Discord server, so shoot me a ping if you have any questions
 If you think this module is crap, you are 100% correct now go away.
 
 
+Navigation
+-----------
+
 .. toctree::
-   :maxdepth: 2
    :hidden:
 
-   Client
    ClassBehavior
 
 
 .. toctree::
+   :caption: Classes
    :hidden:
-   :caption: Data Classes
 
-   
-
-
-
-Project
-SearchResult
-ProjectListing
-Version
-VersionFile
-Dependency
-DependencyList
-
-User
-Team
-TeamMember
-
-License
-ModMessage
-Image
-DonationSite
-Notification
-
+   Client
+   project/index
 

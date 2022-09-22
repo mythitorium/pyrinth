@@ -1,9 +1,7 @@
 .. currentmodule:: swagrinth
 
 Class Behavior
-=============
-
--------------
+===============
 
 .. note::
 
