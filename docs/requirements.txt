@@ -1,2 +1,2 @@
-# Furo theme
-furo
+# theme
+sphinx-book-theme

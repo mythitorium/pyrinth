@@ -1,0 +1,5 @@
+/* Add borders around the in-lien text boxes */
+code {
+    border: 1px solid #dddddd;
+    padding: 2px;
+}

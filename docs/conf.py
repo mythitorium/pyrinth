@@ -7,6 +7,12 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 import furo 
+import sys
+import os
+
+# Took this from discord.py's conf.py because it worked over there and it works here 
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.append(os.path.abspath('extensions'))
 
 project = 'Swagrinth'
 copyright = '2022, Mythitorium'
@@ -20,9 +26,16 @@ templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
+extensions = [
+    'sphinx.ext.autodoc',
+    'attributetable', # Thanks discord.py devs for this lmao
+    'sphinx.ext.napoleon'
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'furo'
+html_theme = 'sphinx_book_theme'
+
 html_static_path = ['_static']
+html_css_files = ['custom.css']
