@@ -30,8 +30,10 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.extlinks',
+    'sphinx.ext.intersphinx',
     'attributetable', # Thanks discord.py devs for this lmao
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
 ]
 
 # -- Options for HTML output -------------------------------------------------
